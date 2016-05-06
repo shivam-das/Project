@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <style>
+    
+#top {
+    color:azure;
+    padding: 15px;
+    font-size: 30px;
+    text-align: center;
+    line-height: 26px; 
+    border: 1px solid;
+    border-bottom-color: black;
+    background-color: cadetblue;
+}
+        .button{
+            background-color:cadetblue;
+    border:2px solid;
+    color:black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+        }
+        #nav{
+            line-height:20px;
+    background-color:#eeeeee;
+    height:800px;
+    width:250px;
+    float:left;
+    padding:5px;
+        }
+           ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+    background-color:cadetblue;
+}
+#legend {
+
+    background: rgba(119, 109, 109, 0.66);
+    padding: 5px;
+}
+     
+       
+    </style>
+<head>
+    <div id= "top">
+    <h2>Chaotic</h2>
+    </div>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+      <script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCc5_z2Zruh01mevWGVavrIZ6D5N5Q_lqc&sensor=false&libraries=geometry">
+    </script>
+    </head>
+<body onload="initialize()">
+<br>
+    <div id = "nav">
+        <br>
+        <form action="" method="post">
+            <input type="file" name="my_file"/>
+            <br>
+        <br>
+            <input type="file" name="fileinput"/>
+        </form>
+        <br>
+        <br>
+        <br>
+            <input type="button" onclick="route();" value="Chaosness" id="button" class="button">
+    </div>
+    <br>
+    <div id="legend">
+        <div class="le"><img src="red.png"><b> = CHAOTIC ROAD</b>
+                    </div>
+                    <br>
+                    <div class="le"><img src="yellow.png"><b> = NORMAL</b>
+                    </div>
+                    <br>
+                    <div class="le"><img src="blue.png"><b> = NON-CHAOTIC ROAD</b>
+                    </div>
+                </div>
+<div id="map_canvas" style="width: 80%; height:720px; float:right; border: 2px solid #dddddd;"></div>
+
+<script type="text/javascript">
+
+
+
+var map,l;
+var Wait;
+var color,plo;
+var polyline = [];
+var linemas = [];
+
+function route(){
+     var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var a = xmlhttp.responseText;
+                    var latlngStr = a.split("\n");
+                    console.log(a);
+                    var i=1;
+                    for (; i < latlngStr.length; i++) {
+                        var col  = latlngStr[i].split(",");
+                        var prev_color = col[2];
+                            while (latlngStr[i] != "end" ){//|| latlngStr[i] != "break") {
+                                var latlnga = latlngStr[i].split(",");
+                                if(latlnga[2] == prev_color){
+                                var slat1 = parseFloat(latlnga[0]);
+                                var slng1 = parseFloat(latlnga[1]);
+                                color = parseInt(latlnga[2]);
+                                var varp = new google.maps.LatLng(slat1, slng1);
+                                polyline.push(varp);
+                                //kerTrail(varp, color);
+                                //temp.push(varp);
+                                i++;
+                                }
+                                else{
+                                     addPolyline(polyline, color);
+                                     polyline = [];
+                                    prev_color = latlnga[2];
+                                }
+                            }
+                        addPolyline(polyline, color);
+                                     polyline = [];
+                          
+                }
+            }
+            };
+                xmlhttp.open("POST", "get-points.php", true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xmlhttp.send();
+}
+            function addPolyline(polyline, color) {
+            //alert(color);
+            if (color == 1)
+                l = '#FF0000';
+            else if (color == 2)
+                l = '#ffbb33';
+            else if (color == 3)
+                l = '#2129e8';
+           plo = new google.maps.Polyline({
+                path: polyline,
+                //geodesic:true,
+                strokeColor: l,
+                strokeOpacity: 5.0,
+                strokeWeight: 5
+            });
+            plo.setMap(map);
+            //polyline=[ ];
+            //linemas.push(plo);
+            console.log(polyline);
+        }
+
+function initialize() {
+	
+        geocoder = new google.maps.Geocoder();
+ 
+
+       var myOptions = {
+                center: new google.maps.LatLng(23.542271413405505, 87.29504853487015),
+                disableDefaultUI: true,
+                zoom: 13,
+                zoomControl: true
+            };
+        map = new google.maps.Map(document.getElementById("map_canvas"),
+            myOptions);
+                    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('legend'));
+
+}
+
+
+
+</script>
+</body>
+</html>

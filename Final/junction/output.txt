@@ -1,0 +1,6 @@
+atm: 0,
+bank: 2,
+bus_stop: 0,
+
+Total Junction points: 46
+
