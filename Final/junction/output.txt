@@ -1,0 +1,6 @@
+bank: 2,
+department_store: 0,
+school: 16,
+
+Total Junction points: 46
+

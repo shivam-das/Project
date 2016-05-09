@@ -1,0 +1,163 @@
+<html>
+
+<head>
+    <link href="../style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+
+    
+<!-- CuFon: Enables smooth pretty custom font rendering. 100% SEO friendly. To disable, remove this section -->
+<script type="text/javascript" src="js/cufon-yui.js"></script>
+<script type="text/javascript" src="js/arial.js"></script>
+<script type="text/javascript" src="js/cuf_run.js"></script>
+ <div class="header">
+    <div class="header_resize">
+     <div class="logo"><h1><a href="../index.html" class="nobg">Transit Planner</a></h1></div>
+      <div class="menu_nav">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li ><a href="../Segmentation/segment.php">Segmentation</a></li>
+          <li><a href="../ITRA_Testing/client1.html">Transit</a></li>
+          <li class="active"><a href="junction.html">Landmark</a></li>
+            <li ><a href="../Heatmap/heatmap.php">HeatMap</a></li>
+        </ul>
+      </div>
+     
+    </div>
+ </div>
+    <title>Landmark Identification</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDb646eVoZNcfbzEQeuPGt09NEpiRtH324&signed_in=true&libraries=drawing,places"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        
+        var points_dict;
+        var points;
+        
+        function getPoints() {
+            var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var json = xmlhttp.responseText;
+                    points_dict = JSON.parse(json);
+                    
+                    console.log(points_dict);
+                    for (var foo in points_dict) {
+                        console.log(foo);
+                        points = points_dict[foo];
+                    }
+                    console.log("points\n");
+                    console.log(points);
+                    
+                    start();
+                }
+            };
+            xmlhttp.open("POST", "get_points.php", true);
+            xmlhttp.send();
+        }
+
+        /*      var points_dict = "<?##php echo json_encode($point_list) ?>";
+              var points;
+              console.log(points_dict);
+              for (var foo in points_dict){
+                 console.log(foo);
+                 points = points_dict[foo];
+              }
+              console.log("points\n");
+              console.log(points);*/
+    </script>
+
+    <div id="nav">
+        <p style="text-decoration:underline; font-size:15px; font-weight:600;">Choose A Trail File:</p>
+    <form action="" method="post">
+        <input type="file" id="fileinput" name="my_file">
+        <input type="submit" onclick="uploading()">
+        </form>
+        <h3 style="text-decoration:underline; font-size:15px; font-weight:600;">Landmarks:</h3>
+
+        <input type="checkbox" name="landmarks[]" value="atm">ATM
+        <br>
+        <input type="checkbox" name="landmarks[]" value="bank">Bank
+        <br>
+        <input type="checkbox" name="landmarks[]" value="bus_stop">Bus Station
+        <br>
+        <input type="checkbox" name="landmarks[]" value="book_store">Book Store
+        <br>
+        <input type="checkbox" name="landmarks[]" value="clothing_store">Clothing Store
+        <br>
+        <input type="checkbox" name="landmarks[]" value="convenience_store">Convenience Store
+        <br>
+        <input type="checkbox" name="landmarks[]" value="department_store">Department Store
+        <br>
+        <input type="checkbox" name="landmarks[]" value="furniture_store">Furniture Store
+        <br>
+        <input type="checkbox" name="landmarks[]" value="grocery_or_supermarket">Grocery/SuperMarket
+        <br>
+        <input type="checkbox" name="landmarks[]" value="hardware_store">Hardware Store
+        <br>
+        <input type="checkbox" name="landmarks[]" value="hospital">Hospital
+        <br>
+        <input type="checkbox" name="landmarks[]" value="jewelry_store">Jewelery Store
+        <br>
+        <input type="checkbox" name="landmarks[]" value="shoe_store">Shoe Store
+        <br>
+        <input type="checkbox" name="landmarks[]" value="shopping_mall">Shopping Mall
+        <br>
+        <input type="checkbox" name="landmarks[]" value="school">School
+        <br>
+        <input type="checkbox" name="landmarks[]" value="hindu_temple">Hindu Temple
+        <br>
+        <input type="checkbox" name="landmarks[]" value="mosque">Mosque
+        <br>
+        <input type="checkbox" name="landmarks[]" value="place_of_worship">Place of Worship
+        <br>
+        <br>
+        <input type="button" name="submit" value="Submit LandMarks" onclick="getlandmarks()">
+        <br>
+
+
+        <input type="submit" name="submit" onclick="getPoints();" value="Get Details">
+    </div>
+    <div id="map-canvas" style=" width: 80% height: 800px; width:1085px; float:right; border: 2px solid"></div>
+    <br>
+    <div id="uploading" style="float:right; width:80%">
+    <p style="font-size:25px; font-weight:600;">#InfoBox</p>
+    
+    </div>
+    <script type="text/javascript" src="script.js"></script>
+
+
+    <style>
+        body{
+            font-family: raleway;
+        }
+            #top {
+            color: azure;
+            padding: 15px;
+            font-size: 30px;
+            text-align: center;
+            line-height: 26px;
+            border: 1px solid;
+            background-color: cadetblue;
+        }
+        #nav{
+            width:250px;
+        }
+    
+        html,
+        body,
+        #map-canvas {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+    </style>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
